@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Новогодний кроссворд</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      color: #d32f2f;
+    }
+    .crossword-grid {
+      display: inline-grid;
+      grid-template-columns: repeat(11, 30px);
+      grid-gap: 1px;
+      margin: 20px auto;
+      background-color: #999;
+      padding: 2px;
+      border: 2px solid #333;
+    }
+    .cell {
+      width: 30px;
+      height: 30px;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+      position: relative;
+    }
+    .cell.black {
+      background-color: #333;
+    }
+    .cell-number {
+      position: absolute;
+      top: 1px;
+      left: 2px;
+      font-size: 8px;
+      color: black;
+    }
+    .definitions {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    .definitions h2 {
+      color: #1976d2;
+    }
+    .definitions ol {
+      padding-left: 20px;
+    }
+    .definitions li {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎄 Новогодний кроссворд 🎄</h1>
+
+  <div class="crossword-grid" id="grid">
+    <!-- Сетка будет заполнена ниже -->
+  </div>
+
+  <div class="definitions">
+    <h2>Определения:</h2>
+    <h3>По горизонтали:</h3>
+    <ol>
+      <li>Праздничное дерево с игрушками (4 буквы)</li>
+      <li>Главный волшебник зимы, раздающий подарки (7 букв)</li>
+      <li>Фигура из снега с морковным носом (9 букв)</li>
+      <li>Сюрприз под ёлкой (7 букв)</li>
+      <li>Яркий бумажный фейерверк на празднике (8 букв)</li>
+      <li>Ароматный цитрус, символ Нового года (8 букв)</li>
+      <li>Цепочка из флажков или огоньков на ёлке (9 букв)</li>
+      <li>Транспорт Деда Мороза (4 буквы)</li>
+      <li>Праздник, который мы ждём 31 декабря (11 букв)</li>
+    </ol>
+
+    <h3>По вертикали:</h3>
+    <ol start="10">
+      <li>Традиционный салат на новогоднем столе (6 букв)</li>
+    </ol>
+  </div>
+
+  <script>
+    // Сетка 11x11: null = чёрная клетка, иначе — буква (заглавная)
+    const grid = [
+      ['Н', 'О', 'В', 'О', 'Г', 'О', 'Д', 'Н', 'И', 'Й', null], // 9 (горизонталь)
+      [null, null, null, null, 'Л', null, null, null, null, null, 'О'], // 10 (вертикаль: ОЛИВЬЕ)
+      [null, null, null, null, 'К', null, null, null, null, null, 'Л'],
+      ['Д', 'Е', 'Д', 'М', 'О', 'Р', 'О', 'З', null, null, 'И'], // 2
+      [null, null, null, null, 'А', null, null, null, null, null, 'В'],
+      [null, 'С', 'Н', 'Е', 'Г', 'О', 'В', 'И', 'К', null, 'Ь'], // 3
+      [null, null, null, null, null, null, null, null, null, null, 'Е'],
+      ['П', 'О', 'Д', 'А', 'Р', 'О', 'К', null, null, null, null], // 4
+      ['Х', 'Л', 'О', 'П', 'У', 'Ш', 'К', 'А', null, null, null], // 5
+      [null, 'М', 'А', 'Н', 'Д', 'А', 'Р', 'И', 'Н', null, null], // 6
+      ['Г', 'И', 'Р', 'Л', 'Я', 'Н', 'Д', 'А', null, null, null], // 7
+    ];
+
+    // Нумерация клеток: номер ставится, если клетка — начало слова (горизонтального или вертикального)
+    const numbers = [
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 3],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0],
+      [0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [10,0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ];
+
+    const gridContainer = document.getElementById('grid');
+    for (let row = 0; row < 11; row++) {
+      for (let col = 0; col < 11; col++) {
+        const cell = document.createElement('div');
+        if (grid[row][col] === null) {
+          cell.classList.add('cell', 'black');
+        } else {
+          cell.classList.add('cell');
+          cell.textContent = grid[row][col];
+          if (numbers[row][col] > 0) {
+            const numSpan = document.createElement('span');
+            numSpan.classList.add('cell-number');
+            numSpan.textContent = numbers[row][col];
+            cell.appendChild(numSpan);
+          }
+        }
+        gridContainer.appendChild(cell);
+      }
+    }
+  </script>
+</body>
+</html>

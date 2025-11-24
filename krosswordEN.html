@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>New Year Crossword</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      text-align: center;
+      padding: 20px;
+      color: #000;
+    }
+    h1 {
+      color: #c62828;
+    }
+    .grid {
+      display: inline-grid;
+      grid-template-columns: repeat(6, 36px);
+      grid-gap: 1px;
+      background-color: #555;
+      padding: 3px;
+      margin: 20px auto;
+      border: 2px solid #333;
+    }
+    .cell {
+      width: 36px;
+      height: 36px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 16px;
+      position: relative;
+    }
+    .black {
+      background: #333;
+    }
+    .number {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      font-size: 9px;
+      color: black;
+    }
+    .definitions {
+      max-width: 550px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    .definitions h2 {
+      color: #0d47a1;
+    }
+    .definitions ol {
+      padding-left: 20px;
+    }
+    .definitions li {
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎄 New Year Crossword 🎄</h1>
+
+  <div class="grid" id="crossword"></div>
+
+  <div class="definitions">
+    <h2>Clues:</h2>
+    <h3>Across:</h3>
+    <ol>
+      <li>Christmas symbol that stands in the living room (4)</li> <!-- TREE -->
+      <li>Falls from the sky in winter (4)</li> <!-- SNOW -->
+    </ol>
+
+    <h3>Down:</h3>
+    <ol start="3">
+      <li>Bright object on top of the Christmas tree (4)</li> <!-- STAR -->
+      <li>Jingle ___ (4)</li> <!-- BELLS -->
+      <li>Present you receive on Christmas morning (4)</li> <!-- GIFT -->
+    </ol>
+  </div>
+
+  <script>
+    // Grid: 5 rows x 6 columns
+    const gridData = [
+      ['B', 'S', null, null, null, 'G'], // BELLS (col0), STAR (col1), GIFT (col5)
+      ['E', 'T', 'R', 'E', 'E', 'I'],   // TREE (row1, col1-4), GIFT continues
+      ['L', 'A', null, null, null, 'F'],
+      ['L', 'R', null, null, null, 'T'],
+      ['S', null, 'S', 'N', 'O', 'W']   // SNOW (row4, col2-5)
+    ];
+
+    // Numbering:
+    // 1 → TREE (starts at [1][1])
+    // 2 → SNOW (starts at [4][2])
+    // 3 → STAR (starts at [0][1])
+    // 4 → BELLS (starts at [0][0])
+    // 5 → GIFT (starts at [0][5])
+    const numbers = [
+      [4, 3, 0, 0, 0, 5],
+      [0, 1, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 2, 0, 0, 0],
+    ];
+
+    const crossword = document.getElementById('crossword');
+    for (let r = 0; r < 5; r++) {
+      for (let c = 0; c < 6; c++) {
+        const cell = document.createElement('div');
+        if (gridData[r][c] === null) {
+          cell.classList.add('cell', 'black');
+        } else {
+          cell.classList.add('cell');
+          cell.textContent = gridData[r][c];
+          if (numbers[r][c]) {
+            const numEl = document.createElement('span');
+            numEl.className = 'number';
+            numEl.textContent = numbers[r][c];
+            cell.appendChild(numEl);
+          }
+        }
+        crossword.appendChild(cell);
+      }
+    }
+  </script>
+</body>
+</html>
