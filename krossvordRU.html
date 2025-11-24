@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Новогодний кроссворд</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e6f2ff;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #d40000;
+    }
+    .container {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(10, 30px);
+      grid-template-rows: repeat(10, 30px);
+      gap: 1px;
+      background-color: #000;
+      padding: 2px;
+      border: 2px solid #000;
+    }
+    .cell {
+      width: 30px;
+      height: 30px;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      font-size: 16px;
+      position: relative;
+    }
+    .cell.black {
+      background-color: #000;
+    }
+    .cell span.number {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      font-size: 10px;
+      color: #000;
+    }
+    .clues {
+      max-width: 300px;
+    }
+    .clues h2 {
+      color: #d40000;
+    }
+    .clue {
+      margin: 8px 0;
+    }
+    .horizontal, .vertical {
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Новогодний кроссворд</h1>
+  <div class="container">
+    <div class="grid" id="crosswordGrid"></div>
+    <div class="clues">
+      <h2>Вопросы:</h2>
+      <div class="horizontal">
+        <h3>По горизонтали:</h3>
+        <div class="clue">1. Новогоднее дерево</div>
+        <div class="clue">3. Небесное новогоднее явление</div>
+        <div class="clue">5. Главный зимний праздник</div>
+        <div class="clue">7. Сказочный дедушка с мешком подарков</div>
+        <div class="clue">9. Зимняя обувь для катания</div>
+      </div>
+      <div class="vertical">
+        <h3>По вертикали:</h3>
+        <div class="clue">2. Символ года, например, петух</div>
+        <div class="clue">4. Сладкий новогодний гость</div>
+        <div class="clue">6. Зимняя забава на льду</div>
+        <div class="clue">8. Звук, раздающийся в полночь</div>
+        <div class="clue">10. Теплая зимняя одежда</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Сетка 10x10, пустые ячейки — null, черные — "■"
+    const grid = Array(10).fill().map(() => Array(10).fill(null));
+
+    // Отмечаем черные клетки (■)
+    const blackCells = [
+      [0,0], [0,1], [0,2], [0,8], [0,9],
+      [1,0], [1,9],
+      [2,0], [2,9],
+      [3,0], [3,7], [3,8], [3,9],
+      [4,0], [4,1], [4,8], [4,9],
+      [5,0], [5,1], [5,8], [5,9],
+      [6,0], [6,7], [6,8], [6,9],
+      [7,0], [7,9],
+      [8,0], [8,9],
+      [9,0], [9,1], [9,2], [9,7], [9,8], [9,9]
+    ];
+
+    blackCells.forEach(([r, c]) => grid[r][c] = "■");
+
+    // Слова и их позиции
+    const words = [
+      { word: "ЁЛКА", start: [0,3], dir: "h", num: 1 },
+      { word: "САНИ", start: [1,1], dir: "v", num: 2 },
+      { word: "САЛЮТ", start: [2,3], dir: "h", num: 3 },
+      { word: "ДЕД", start: [3,1], dir: "v", num: 4 },
+      { word: "ПРАЗДНИК", start: [4,2], dir: "h", num: 5 },
+      { word: "КОНЬКИ", start: [4,8], dir: "v", num: 6 },
+      { word: "ДЕДМОРОЗ", start: [6,1], dir: "h", num: 7 },
+      { word: "БОЙ", start: [7,7], dir: "v", num: 8 },
+      { word: "КОНЬКИ", start: [8,3], dir: "h", num: 9 },
+      { word: "ШУБА", start: [5,7], dir: "v", num: 10 }
+    ];
+
+    // Заполняем сетку буквами
+    words.forEach(w => {
+      const [r, c] = w.start;
+      if (w.dir === "h") {
+        for (let i = 0; i < w.word.length; i++) {
+          grid[r][c + i] = w.word[i];
+          if (i === 0) grid[r][c + i] = { letter: w.word[i], number: w.num };
+        }
+      } else {
+        for (let i = 0; i < w.word.length; i++) {
+          grid[r + i][c] = w.word[i];
+          if (i === 0) grid[r + i][c] = { letter: w.word[i], number: w.num };
+        }
+      }
+    });
+
+    // Отрисовка сетки
+    const container = document.getElementById("crosswordGrid");
+    for (let r = 0; r < 10; r++) {
+      for (let c = 0; c < 10; c++) {
+        const cell = document.createElement("div");
+        cell.classList.add("cell");
+        if (grid[r][c] === "■") {
+          cell.classList.add("black");
+        } else if (grid[r][c] !== null) {
+          if (typeof grid[r][c] === "object") {
+            cell.textContent = grid[r][c].letter;
+            const numSpan = document.createElement("span");
+            numSpan.className = "number";
+            numSpan.textContent = grid[r][c].number;
+            cell.appendChild(numSpan);
+          } else {
+            cell.textContent = grid[r][c];
+          }
+        }
+        container.appendChild(cell);
+      }
+    }
+  </script>
+</body>
+</html>
