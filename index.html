@@ -5,7 +5,12 @@
   <link type=“text/css” rel=“stylesheet” href=“style.css” />
 </head>
 <body>
-  <p><strong>Сегодня: 16 января 2026</strong></p>
+  <p>Сегодня: <span id="current-date"></span></p>
+  <script>
+    const now = new Date();
+    const options = { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Europe/Moscow' };
+    document.getElementById('current-date').textContent = now.toLocaleDateString('ru-RU', options);
+  </script>
   <blockquote class=“q”>Путешествие в тысячу миль начинается с одного шага (Лао Цзы) </blockquote>
   <h2> 6 декабря , 2025</h2>
 <img src=“Icons/Icons8-новый-год-96.png” alt=“Новый год”>
